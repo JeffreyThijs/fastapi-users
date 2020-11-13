@@ -4,6 +4,7 @@ import jwt
 from fastapi import Response
 from fastapi.security import APIKeyCookie
 from pydantic import UUID4
+from fastapi.responses import RedirectResponse
 
 from fastapi_users.authentication import BaseAuthentication
 from fastapi_users.db.base import BaseUserDatabase
@@ -113,3 +114,19 @@ class CookieAuthentication(BaseAuthentication[str]):
     async def _generate_token(self, user: BaseUserDB) -> str:
         data = {"user_id": str(user.id), "aud": self.token_audience}
         return generate_jwt(data, self.lifetime_seconds, self.secret, JWT_ALGORITHM)
+
+
+    async def get_login_redirected_response(self, user: BaseUserDB, response: Response, redirect_uri: str) -> Any:
+        token = await self._generate_token(user)
+        response.set_cookie(
+            self.cookie_name,
+            token,
+            max_age=self.lifetime_seconds,
+            path=self.cookie_path,
+            domain=self.cookie_domain,
+            secure=self.cookie_secure,
+            httponly=self.cookie_httponly,
+            samesite=self.cookie_samesite,
+        )
+
+        return RedirectResponse(redirect_uri)
