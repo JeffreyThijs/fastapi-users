@@ -60,6 +60,7 @@ def get_oauth_router(
         request: Request,
         authentication_backend: str,
         scopes: List[str] = Query(None),
+        redirect_uri: Optional[str] = None
     ):
         # Check that authentication_backend exists
         backend_exists = False
@@ -77,6 +78,7 @@ def get_oauth_router(
 
         state_data = {
             "authentication_backend": authentication_backend,
+            "post_callback_redirect_uri": redirect_uri
         }
         state = generate_state_token(state_data, state_secret)
         authorization_url = await oauth_client.get_authorization_url(
@@ -151,8 +153,14 @@ def get_oauth_router(
         # Authenticate
         for backend in authenticator.backends:
             if backend.name == state_data["authentication_backend"]:
-                return await backend.get_login_response(
-                    cast(models.BaseUserDB, user), response
-                )
+                redirect_uri = state_data.get("post_callback_redirect_uri", None)
+                if redirect_uri is not None:
+                    return await backend.get_login_redirected_response(
+                        cast(models.BaseUserDB, user), response, redirect_uri
+                    )
+                else:
+                    return await backend.get_login_response(
+                        cast(models.BaseUserDB, user), response
+                    )
 
     return router
