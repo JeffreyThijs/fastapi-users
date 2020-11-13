@@ -37,3 +37,6 @@ class BaseAuthentication(Generic[T]):
 
     async def get_logout_response(self, user: BaseUserDB, response: Response) -> Any:
         raise NotImplementedError()
+    
+    async def get_login_redirected_response(self, user: BaseUserDB, response: Response, redirect_uri: str) -> Any:
+        raise NotImplementedError()

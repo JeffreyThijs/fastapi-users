@@ -4,6 +4,9 @@ import jwt
 from fastapi import Response
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import UUID4
+from fastapi.responses import RedirectResponse
+import urllib.parse as urlparse
+from urllib.parse import urlencode
 
 from fastapi_users.authentication.base import BaseAuthentication
 from fastapi_users.db.base import BaseUserDatabase
@@ -72,3 +75,25 @@ class JWTAuthentication(BaseAuthentication[str]):
     async def _generate_token(self, user: BaseUserDB) -> str:
         data = {"user_id": str(user.id), "aud": self.token_audience}
         return generate_jwt(data, self.lifetime_seconds, self.secret, JWT_ALGORITHM)
+    
+    
+    def _generate_redirect_url(base_url: str, options: dict) -> str:
+        
+        url_parts = list(urlparse.urlparse(base_url))
+        
+        query = dict(urlparse.parse_qsl(url_parts[4]))
+        query.update(options)
+
+        url_parts[4] = urlencode(query)
+
+        return urlparse.urlunparse(url_parts)
+
+    async def get_login_redirected_response(self, user: BaseUserDB, response: Response, redirect_uri: str) -> Any:
+        token = await self._generate_token(user)
+    
+        return RedirectResponse(
+            self._generate_redirect_url(
+                base_url=redirect_uri,
+                params={"access_token": token, "token_type": "bearer"}
+            )
+        )
