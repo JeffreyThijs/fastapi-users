@@ -42,7 +42,7 @@ tortoise-orm = ">=0.15.18,<0.17.0"
 makefun = ">=1.9.2,<1.10"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true
