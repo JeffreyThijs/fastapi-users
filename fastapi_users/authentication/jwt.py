@@ -13,6 +13,16 @@ from fastapi_users.db.base import BaseUserDatabase
 from fastapi_users.models import BaseUserDB
 from fastapi_users.utils import JWT_ALGORITHM, generate_jwt
 
+def _generate_redirect_url(base_url: str, options: dict) -> str:
+    
+    url_parts = list(urlparse.urlparse(base_url))
+    
+    query = dict(urlparse.parse_qsl(url_parts[4]))
+    query.update(options)
+
+    url_parts[4] = urlencode(query)
+
+    return urlparse.urlunparse(url_parts)
 
 class JWTAuthentication(BaseAuthentication[str]):
     """
@@ -77,23 +87,12 @@ class JWTAuthentication(BaseAuthentication[str]):
         return generate_jwt(data, self.lifetime_seconds, self.secret, JWT_ALGORITHM)
     
     
-    def _generate_redirect_url(base_url: str, options: dict) -> str:
-        
-        url_parts = list(urlparse.urlparse(base_url))
-        
-        query = dict(urlparse.parse_qsl(url_parts[4]))
-        query.update(options)
-
-        url_parts[4] = urlencode(query)
-
-        return urlparse.urlunparse(url_parts)
-
     async def get_login_redirected_response(self, user: BaseUserDB, response: Response, redirect_uri: str) -> Any:
         token = await self._generate_token(user)
     
         return RedirectResponse(
-            self._generate_redirect_url(
+            _generate_redirect_url(
                 base_url=redirect_uri,
-                params={"access_token": token, "token_type": "bearer"}
+                options={"access_token": token, "token_type": "bearer"}
             )
         )
