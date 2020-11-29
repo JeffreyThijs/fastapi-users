@@ -1077,7 +1077,7 @@ h11 = ">=0.8"
 standard = ["websockets (>=8.0.0,<9.0.0)", "watchgod (>=0.6,<0.7)", "python-dotenv (>=0.13)", "PyYAML (>=5.1)", "httptools (>=0.1.0,<0.2.0)", "uvloop (>=0.14.0)", "colorama (>=0.4)"]
 
 [metadata]
-content-hash = "e973306802be05cc911f2d71a1491f53cd3d3cb4233e824f0f9897ff006dda0a"
+content-hash = "57bf2a1e2b3dbfb5f5412461b5cb343cb18778511f5b63ee1e81bb4e062d4dc5"
 python-versions = "^3.8"
 
 [metadata.files]
