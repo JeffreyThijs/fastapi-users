@@ -1,6 +1,9 @@
 from typing import Awaitable, Type
 
-from typing_extensions import Protocol
+try:
+    from typing import Protocol
+except ImportError:
+    from typing_extensions import Protocol  # type: ignore
 
 from fastapi_users import models
 from fastapi_users.db import BaseUserDatabase
