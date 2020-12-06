@@ -28,6 +28,7 @@ httpx-oauth = "*"
 httpx = "*"
 asgi_lifespan = "*"
 uvicorn = "*"
+importlib-metadata = "*"
 
 [packages]
 fastapi = ">=0.54.0,<0.63.0"
@@ -43,7 +44,7 @@ makefun = ">=1.9.2,<1.10"
 typing-extensions = ">=3.7.4.3"
 
 [requires]
-python_version = "3.8"
+python_version = "3.7"
 
 [pipenv]
 allow_prereleases = true
