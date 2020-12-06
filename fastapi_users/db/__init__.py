@@ -10,6 +10,7 @@ try:
         SQLAlchemyBaseOAuthAccountTable,
         SQLAlchemyBaseUserTable,
         SQLAlchemyUserDatabase,
+        SQLAlchemyAsyncPGUserDatabase,
     )
 except ImportError:  # pragma: no cover
     pass

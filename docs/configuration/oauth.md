@@ -172,6 +172,12 @@ app.include_router(google_oauth_router, prefix="/auth/google", tags=["auth"])
 {!./src/oauth_full_sqlalchemy.py!}
 ```
 
+#### SQLAlchemy (with sqlalchemy async engine)
+
+``` py
+{!./src/oauth_full_sqlalchemy_asyncpg.py!}
+```
+
 #### MongoDB
 
 ```py

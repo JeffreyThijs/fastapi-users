@@ -12,6 +12,12 @@ Here is a full working example with JWT authentication to help get you started.
 {!./src/full_sqlalchemy.py!}
 ```
 
+#### SQLAlchemy (with sqlalchemy async engine)
+
+``` py
+{!./src/full_sqlalchemy_asyncpg.py!}
+```
+
 ## MongoDB
 
 ```py
